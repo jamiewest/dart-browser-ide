@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!-- Boot page for code-oss in a browser tab. Derived from vscode-web's own
+     out/vs/code/browser/workbench/workbench.html: same script order (which
+     matters), but the stock workbench.js is replaced by boot.js so the
+     construction options are built here instead of fetched from a product.json
+     a server would have templated. -->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Dart IDE</title>
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Dart IDE" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"
+    />
+    <link rel="icon" href="vscode/favicon.ico" type="image/x-icon" />
+    <link
+      data-name="vs/workbench/workbench.web.main"
+      rel="stylesheet"
+      href="vscode/out/vs/workbench/workbench.web.main.css"
+    />
+    <style>
+      /* Self-hosted, not a CDN: cross-origin isolation forbids third-party
+         subresources, and this has to work offline. JetBrains Mono and Inter
+         are both OFL-1.1; the licences ship beside the files. Only the latin
+         subsets are vendored (180 KB total). */
+      @font-face {
+        font-family: 'JetBrains Mono Variable';
+        font-style: normal;
+        font-display: swap;
+        font-weight: 100 800;
+        src: url('fonts/jetbrains-mono-latin-wght-normal.woff2') format('woff2-variations');
+      }
+      @font-face {
+        font-family: 'JetBrains Mono Variable';
+        font-style: italic;
+        font-display: swap;
+        font-weight: 100 800;
+        src: url('fonts/jetbrains-mono-latin-wght-italic.woff2') format('woff2-variations');
+      }
+      @font-face {
+        font-family: 'Inter Variable';
+        font-style: normal;
+        font-display: swap;
+        font-weight: 100 900;
+        src: url('fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+      }
+      @font-face {
+        font-family: 'Inter Variable';
+        font-style: italic;
+        font-display: swap;
+        font-weight: 100 900;
+        src: url('fonts/inter-latin-wght-italic.woff2') format('woff2-variations');
+      }
+
+      html, body { height: 100%; margin: 0; overflow: hidden; }
+
+      /* VS Code has no setting for the workbench UI font — it is baked into the
+         stylesheet — so the page supplies it. Editor, terminal and output fonts
+         come from settings in boot.js instead. */
+      .monaco-workbench {
+        font-family: 'Inter Variable', -apple-system, BlinkMacSystemFont,
+          'Segoe UI', system-ui, sans-serif;
+        font-feature-settings: 'cv05' 1, 'cv08' 1, 'ss03' 1;
+      }
+      #boot-error {
+        display: none; position: fixed; inset: 0; z-index: 10;
+        padding: 24px; font: 13px/1.5 ui-monospace, monospace;
+        white-space: pre-wrap; background: #1f1f1f; color: #f48771;
+      }
+    </style>
+  </head>
+
+  <body aria-label=""></body>
+
+  <pre id="boot-error"></pre>
+
+  <script>
+    // Cross-origin isolation: served by headers in development, and by a
+    // service worker on a static host that cannot set them (GitHub Pages).
+    // The first load registers and reloads once; later loads are already
+    // isolated and skip both.
+    if (!crossOriginIsolated && 'serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register(new URL('coi-serviceworker.js', document.baseURI), {
+          scope: new URL('.', document.baseURI).pathname,
+        })
+        .then((registration) => {
+          if (registration.active && !navigator.serviceWorker.controller) {
+            window.location.reload();
+          }
+          registration.addEventListener('updatefound', () => {
+            registration.installing?.addEventListener('statechange', (event) => {
+              if (event.target.state === 'activated') window.location.reload();
+            });
+          });
+        })
+        .catch((error) => {
+          // Recorded, not thrown in the user's face: without isolation the
+          // editor, analysis, pub, and running code all still work — only
+          // breakpoints do not, and the extension says so where that matters.
+          // (The overlay this used to use is for fatal boot failures; a
+          // non-fatal warning must not cover the workbench.)
+          window.__coiError = String(error);
+          console.warn(`cross-origin isolation unavailable: ${error}`);
+        });
+    }
+  </script>
+
+  <!-- Startup (do not modify order of script tags!) -->
+  <script src="vscode/out/vs/loader.js"></script>
+  <script src="vscode/out/vs/webPackagePaths.js"></script>
+  <script>
+    // Relative to the document base, never to the origin: on GitHub Pages the
+    // app lives under /<repo>/.
+    const appBase = new URL('.', document.baseURI).toString();
+    const baseUrl = new URL('vscode', appBase).toString();
+    Object.keys(self.webPackagePaths).forEach((key) => {
+      self.webPackagePaths[key] =
+        `${baseUrl}/node_modules/${key}/${self.webPackagePaths[key]}`;
+    });
+    require.config({
+      baseUrl: `${baseUrl}/out`,
+      recordStats: true,
+      trustedTypesPolicy: window.trustedTypes?.createPolicy('amdLoader', {
+        createScriptURL(value) {
+          if (value.startsWith(window.location.origin)) return value;
+          throw new Error(`Invalid script url: ${value}`);
+        },
+      }),
+      paths: self.webPackagePaths,
+    });
+    window.addEventListener('error', (event) => {
+      const el = document.getElementById('boot-error');
+      el.style.display = 'block';
+      el.textContent += `${event.message}\n    ${event.filename}:${event.lineno}\n`;
+    });
+  </script>
+  <script src="vscode/out/vs/workbench/workbench.web.main.nls.js"></script>
+  <script src="vscode/out/vs/workbench/workbench.web.main.js"></script>
+  <script src="boot.js"></script>
+</html>

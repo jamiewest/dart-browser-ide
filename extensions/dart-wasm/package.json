@@ -1,0 +1,117 @@
+{
+  "name": "dart-wasm",
+  "displayName": "Dart (Wasm toolchain)",
+  "description": "Dart language support backed by the analyzer, CFE and dart2wasm compiled to WebAssembly \u2014 no server, no network.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "BSD-3-Clause",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "browser": "./dist/extension.js",
+  "activationEvents": [
+    "onFileSystem:opfs",
+    "onStartupFinished",
+    "onDebugResolve:dart-wasm"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "dartWasm.showToolchainStatus",
+        "title": "Dart: Show Toolchain Status",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.selfTest",
+        "title": "Dart: Run Language Server Self-Test",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.run",
+        "title": "Dart: Run Without Debugging",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.debug",
+        "title": "Dart: Start Debugging",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubGet",
+        "title": "Dart: Get Packages",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubAdd",
+        "title": "Dart: Add Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubRemove",
+        "title": "Dart: Remove Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.newFlutterProject",
+        "title": "Flutter: New Project",
+        "category": "Flutter"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "dart"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "dart-wasm",
+        "label": "Dart (Wasm)",
+        "languages": [
+          "dart"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Entry point, relative to the project folder.",
+                "default": "lib/main.dart"
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Project folder, e.g. /workspace/hello_dart."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "dart-wasm",
+            "request": "launch",
+            "name": "Run Dart",
+            "program": "lib/main.dart"
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Dart (Wasm)",
+      "properties": {
+        "dartWasm.runPubGetOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Run pub get when a pubspec.yaml is saved."
+        }
+      }
+    }
+  }
+}
