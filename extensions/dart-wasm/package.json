@@ -1,0 +1,684 @@
+{
+  "name": "dart-wasm",
+  "displayName": "Dart (Wasm toolchain)",
+  "description": "Dart language support backed by the analyzer, CFE and dart2wasm compiled to WebAssembly \u2014 no server, no network.",
+  "version": "0.0.1",
+  "publisher": "local",
+  "license": "BSD-3-Clause",
+  "engines": {
+    "vscode": "^1.91.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "browser": "./dist/extension.js",
+  "activationEvents": [
+    "onFileSystem:opfs",
+    "onStartupFinished",
+    "onDebugResolve:dart-wasm"
+  ],
+  "capabilities": {
+    "virtualWorkspaces": true,
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "dart.sortMembers",
+        "title": "Sort Members",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.showToolchainStatus",
+        "title": "Dart: Show Toolchain Status",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.selfTest",
+        "title": "Dart: Run Language Server Self-Test",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.run",
+        "title": "Dart: Run Without Debugging",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.debug",
+        "title": "Dart: Start Debugging",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubGet",
+        "title": "Dart: Get Packages",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubAdd",
+        "title": "Dart: Add Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.pubRemove",
+        "title": "Dart: Remove Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.newFlutterProject",
+        "title": "Flutter: New Project",
+        "category": "Flutter"
+      },
+      {
+        "command": "dartWasm.git.init",
+        "title": "Initialize Repository",
+        "category": "Git (Wasm)",
+        "icon": "$(add)"
+      },
+      {
+        "command": "dartWasm.git.refresh",
+        "title": "Refresh",
+        "category": "Git (Wasm)",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "dartWasm.git.commit",
+        "title": "Commit",
+        "category": "Git (Wasm)",
+        "icon": "$(check)"
+      },
+      {
+        "command": "dartWasm.git.stage",
+        "title": "Stage Changes",
+        "category": "Git (Wasm)",
+        "icon": "$(add)"
+      },
+      {
+        "command": "dartWasm.git.unstage",
+        "title": "Unstage Changes",
+        "category": "Git (Wasm)",
+        "icon": "$(remove)"
+      },
+      {
+        "command": "dartWasm.git.openChange",
+        "title": "Open Changes",
+        "category": "Git (Wasm)"
+      },
+      {
+        "command": "dart.goToSuper",
+        "title": "Go to Super Class/Member",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.goToImports",
+        "title": "Go to Imports",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.goToAugmented",
+        "title": "Go to Augmented Class/Member/Function",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.goToAugmentation",
+        "title": "Go to Class/Member/Function Augmentation",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.restartAnalysisServer",
+        "title": "Restart Analysis Server",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.forceReanalyze",
+        "title": "Reanalyze Project",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.toggleShowTodos",
+        "title": "Toggle Show TODOs",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.addDevDependency",
+        "title": "Add Dev Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "pub.upgrade",
+        "title": "Upgrade Packages",
+        "category": "Pub"
+      },
+      {
+        "command": "pub.outdated",
+        "title": "List Outdated Packages",
+        "category": "Pub"
+      },
+      {
+        "command": "dart.goToLocation",
+        "title": "Go to Location",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.edit.fixAllInWorkspace",
+        "title": "Apply Fix All in Workspace",
+        "category": "Dart"
+      },
+      {
+        "command": "dart.edit.fixAllInWorkspace.preview",
+        "title": "Preview Fix All in Workspace",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.dependencies.refresh",
+        "title": "Refresh",
+        "category": "Dart",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "dartWasm.dependencies.openOnPubDev",
+        "title": "Open on pub.dev",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.dependencies.remove",
+        "title": "Remove Dependency",
+        "category": "Dart"
+      },
+      {
+        "command": "dartWasm.properties.edit",
+        "title": "Edit Property",
+        "category": "Flutter"
+      },
+      {
+        "command": "dartWasm.flutter.toggleDebugPainting",
+        "title": "Toggle Debug Painting",
+        "category": "Flutter",
+        "icon": "$(symbol-ruler)"
+      },
+      {
+        "command": "dartWasm.flutter.togglePaintBaselines",
+        "title": "Toggle Baseline Painting",
+        "category": "Flutter",
+        "icon": "$(symbol-text)"
+      },
+      {
+        "command": "dartWasm.flutter.toggleRepaintRainbow",
+        "title": "Toggle Repaint Rainbow",
+        "category": "Flutter",
+        "icon": "$(symbol-color)"
+      },
+      {
+        "command": "dartWasm.flutter.toggleSlowAnimations",
+        "title": "Toggle Slow Animations",
+        "category": "Flutter",
+        "icon": "$(watch)"
+      },
+      {
+        "command": "dartWasm.flutter.toggleDebugModeBanner",
+        "title": "Toggle Debug-Mode Banner",
+        "category": "Flutter",
+        "icon": "$(tag)"
+      },
+      {
+        "command": "dartWasm.flutter.togglePerformanceOverlay",
+        "title": "Toggle Performance Overlay",
+        "category": "Flutter",
+        "icon": "$(dashboard)"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "dart"
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "dart-wasm",
+        "label": "Dart (Wasm)",
+        "languages": [
+          "dart"
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Entry point, relative to the project folder.",
+                "default": "lib/main.dart"
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Project folder, e.g. /workspace/hello_dart."
+              }
+            }
+          }
+        },
+        "initialConfigurations": [
+          {
+            "type": "dart-wasm",
+            "request": "launch",
+            "name": "Run Dart",
+            "program": "lib/main.dart"
+          }
+        ]
+      }
+    ],
+    "configuration": [
+      {
+        "title": "Dart",
+        "properties": {
+          "dart.completeFunctionCalls": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to insert parentheses and placeholders for arguments during code completion. The server defaults this to false; the Dart extension turns it on."
+          },
+          "dart.enableSnippets": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to include the Dart and Flutter snippets (stless, stful, stanim, main, test, group, class, try, for, switch) in code completion. They come from the analysis server, not from this extension."
+          },
+          "dart.autoImportCompletions": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to include symbols that have not been imported in the completion list and add the import automatically. Applied at startup."
+          },
+          "dart.showTodos": {
+            "type": [
+              "boolean",
+              "array"
+            ],
+            "default": true,
+            "description": "Whether to show TODOs in the Problems list. May be a list of comment types (for example [\"TODO\", \"FIXME\"]) to show only those."
+          },
+          "dart.documentation": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "default": null,
+            "enum": [
+              "full",
+              "summary",
+              "none",
+              null
+            ],
+            "description": "How much documentation to show in hovers and completion details."
+          },
+          "dart.lineLength": {
+            "type": "number",
+            "default": 80,
+            "description": "The maximum length of a line of code formatted by the SDK formatter. Prefer formatter.page_width in analysis_options.yaml."
+          },
+          "dart.maxCompletionItems": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "default": null,
+            "description": "The maximum number of completion items to return."
+          },
+          "dart.enableSdkFormatter": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to enable the dart_style formatter for Dart files."
+          },
+          "dart.renameFilesWithClasses": {
+            "type": "string",
+            "default": "never",
+            "enum": [
+              "always",
+              "prompt",
+              "never"
+            ],
+            "description": "Whether to rename files when renaming a class with a matching name."
+          },
+          "dart.updateImportsOnRename": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to update imports when a file is moved or renamed. Requires the editor to raise a rename event for the opfs: file system."
+          },
+          "dart.includeDependenciesInWorkspaceSymbols": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether \"Go to Symbol in Workspace\" includes symbols from the SDK and from package dependencies."
+          },
+          "dart.analysisExcludedFolders": {
+            "type": "array",
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "description": "Paths to exclude from analysis."
+          },
+          "dart.previewCommitCharacters": {
+            "type": "boolean",
+            "default": false,
+            "description": "EXPERIMENTAL: whether to commit the selected completion item on characters such as \".\" and \"(\"."
+          },
+          "dart.experimentalRefactors": {
+            "type": "boolean",
+            "default": false,
+            "description": "EXPERIMENTAL: whether to offer possibly unfinished refactors on the lightbulb."
+          },
+          "dart.closingLabels": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to show annotations against constructor and method invocations and lists that span multiple lines."
+          },
+          "dart.closingLabelsPrefix": {
+            "type": "string",
+            "default": " // ",
+            "description": "The prefix to use in closing labels."
+          },
+          "dart.closingLabelsTextStyle": {
+            "type": "string",
+            "default": "normal",
+            "enum": [
+              "normal",
+              "italic"
+            ],
+            "description": "The text style to use in closing labels."
+          },
+          "dart.showMainCodeLens": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to show Run and Debug CodeLens actions above main()."
+          },
+          "dart.runPubGetOnPubspecChanges": {
+            "type": "string",
+            "default": "always",
+            "enum": [
+              "always",
+              "prompt",
+              "never"
+            ],
+            "description": "Whether to run pub get when a pubspec.yaml is saved."
+          },
+          "dart.previewFlutterUiGuides": {
+            "type": "boolean",
+            "default": false,
+            "description": "EXPERIMENTAL: whether to draw guide lines connecting nested Flutter widgets in the editor."
+          },
+          "dart.flutterGutterIcons": {
+            "type": "boolean",
+            "default": true,
+            "description": "Whether to show Flutter icon previews in the editor. Upstream draws these in the gutter; here they render inline, because the gutter needs an image and the glyph comes from a font (see src/icons.js)."
+          }
+        }
+      },
+      {
+        "title": "Dart (Wasm) \u2014 browser only",
+        "properties": {
+          "dartWasm.git.userName": {
+            "type": "string",
+            "default": "",
+            "description": "Name recorded as the author of commits made here. Commits are refused until this and dartWasm.git.userEmail are set \u2014 there is no global git config in a browser tab to fall back on."
+          },
+          "dartWasm.git.userEmail": {
+            "type": "string",
+            "default": "",
+            "description": "Email recorded as the author of commits made here."
+          }
+        }
+      }
+    ],
+    "menus": {
+      "scm/title": [
+        {
+          "command": "dartWasm.git.commit",
+          "group": "navigation",
+          "when": "scmProvider =~ /^dart-wasm-git/"
+        },
+        {
+          "command": "dartWasm.git.refresh",
+          "group": "navigation",
+          "when": "scmProvider =~ /^dart-wasm-git/"
+        }
+      ],
+      "scm/resourceState/context": [
+        {
+          "command": "dartWasm.git.stage",
+          "group": "inline",
+          "when": "scmProvider =~ /^dart-wasm-git/ && scmResourceGroup == workingTree"
+        },
+        {
+          "command": "dartWasm.git.unstage",
+          "group": "inline",
+          "when": "scmProvider =~ /^dart-wasm-git/ && scmResourceGroup == index"
+        },
+        {
+          "command": "dartWasm.git.stage",
+          "group": "1_modification",
+          "when": "scmProvider =~ /^dart-wasm-git/ && scmResourceGroup == workingTree"
+        },
+        {
+          "command": "dartWasm.git.unstage",
+          "group": "1_modification",
+          "when": "scmProvider =~ /^dart-wasm-git/ && scmResourceGroup == index"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "dartWasm.git.openChange",
+          "when": "false"
+        },
+        {
+          "command": "dart.goToLocation",
+          "when": "false"
+        },
+        {
+          "command": "dart.sortMembers",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToSuper",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToImports",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToAugmented",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToAugmentation",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dartWasm.dependencies.openOnPubDev",
+          "when": "false"
+        },
+        {
+          "command": "dartWasm.dependencies.remove",
+          "when": "false"
+        },
+        {
+          "command": "dartWasm.properties.edit",
+          "when": "false"
+        },
+        {
+          "command": "dartWasm.flutter.toggleDebugPainting",
+          "when": "dartWasm:flutterSession"
+        },
+        {
+          "command": "dartWasm.flutter.togglePaintBaselines",
+          "when": "dartWasm:flutterSession"
+        },
+        {
+          "command": "dartWasm.flutter.toggleRepaintRainbow",
+          "when": "dartWasm:flutterSession"
+        },
+        {
+          "command": "dartWasm.flutter.toggleSlowAnimations",
+          "when": "dartWasm:flutterSession"
+        },
+        {
+          "command": "dartWasm.flutter.toggleDebugModeBanner",
+          "when": "dartWasm:flutterSession"
+        },
+        {
+          "command": "dartWasm.flutter.togglePerformanceOverlay",
+          "when": "dartWasm:flutterSession"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "dart.sortMembers",
+          "group": "1_dart@1",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToSuper",
+          "group": "navigation@1",
+          "when": "editorLangId == dart"
+        },
+        {
+          "command": "dart.goToImports",
+          "group": "navigation@2",
+          "when": "editorLangId == dart"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "dartWasm.pubGet",
+          "group": "2_dart",
+          "when": "resourceFilename == pubspec.yaml"
+        },
+        {
+          "command": "pub.upgrade",
+          "group": "2_dart",
+          "when": "resourceFilename == pubspec.yaml"
+        },
+        {
+          "command": "pub.outdated",
+          "group": "2_dart",
+          "when": "resourceFilename == pubspec.yaml"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "dartWasm.dependencies.refresh",
+          "when": "view == dartDependencyTree",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "dartWasm.dependencies.openOnPubDev",
+          "when": "view == dartDependencyTree && viewItem =~ /^hosted-/",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.dependencies.remove",
+          "when": "view == dartDependencyTree && viewItem =~ /-removable$/",
+          "group": "1_modify"
+        },
+        {
+          "command": "dartWasm.pubGet",
+          "when": "view == dartDependencyTree && viewItem == dartProject",
+          "group": "1_modify"
+        }
+      ],
+      "debug/toolBar": [
+        {
+          "command": "dartWasm.flutter.toggleDebugPainting",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.flutter.togglePaintBaselines",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.flutter.toggleRepaintRainbow",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.flutter.toggleSlowAnimations",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.flutter.toggleDebugModeBanner",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        },
+        {
+          "command": "dartWasm.flutter.togglePerformanceOverlay",
+          "when": "debugType == 'dart-wasm' && dartWasm:flutterSession",
+          "group": "navigation"
+        }
+      ]
+    },
+    "colors": [
+      {
+        "id": "dart.closingLabels",
+        "description": "The color of the 'closing label' annotations shown against constructor and method invocations and lists that span multiple lines.",
+        "defaults": {
+          "dark": "tab.inactiveForeground",
+          "light": "tab.inactiveForeground",
+          "highContrast": "tab.inactiveForeground",
+          "highContrastLight": "tab.inactiveForeground"
+        }
+      },
+      {
+        "id": "dart.flutterUiGuides",
+        "description": "The color of the Flutter UI guidelines shown in the editor.",
+        "defaults": {
+          "dark": "#A3A3A3",
+          "light": "#A3A3A3",
+          "highContrast": "#CCCCCC",
+          "highContrastLight": "#333333"
+        }
+      }
+    ],
+    "configurationDefaults": {
+      "[dart]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true,
+        "editor.detectIndentation": false,
+        "editor.suggest.insertMode": "replace",
+        "editor.defaultFormatter": "local.dart-wasm",
+        "editor.inlayHints.enabled": "offUnlessPressed"
+      },
+      "[yaml]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+      },
+      "files.watcherExclude": {
+        "**/.dart_tool": true
+      },
+      "search.exclude": {
+        "**/.dart_tool": true,
+        "**/.pub-cache": true
+      },
+      "explorer.fileNesting.enabled": true,
+      "explorer.fileNesting.patterns": {
+        "pubspec.yaml": "pubspec.lock,pubspec_overrides.yaml,.metadata,analysis_options.yaml",
+        "*.dart": "${capture}.g.dart,${capture}.freezed.dart"
+      }
+    },
+    "views": {
+      "explorer": [
+        {
+          "id": "dartDependencyTree",
+          "name": "Dependencies",
+          "icon": "$(package)",
+          "when": "dartWasm:anyProjectLoaded"
+        },
+        {
+          "id": "dartPropertyEditor",
+          "name": "Flutter Properties",
+          "icon": "$(settings)",
+          "when": "dartWasm:anyFlutterProject"
+        }
+      ]
+    }
+  }
+}
